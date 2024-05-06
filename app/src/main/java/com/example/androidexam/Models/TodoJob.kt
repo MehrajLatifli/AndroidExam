@@ -5,6 +5,6 @@ import androidx.annotation.DrawableRes
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class TodoJob(val task: String, @DrawableRes val warningimage: Int, val islastday:Boolean): Parcelable
+data class TodoJob(val task: String?=null, @DrawableRes val warningimage: Int?=null, val islastday:Boolean?=null): Parcelable
 {
 }

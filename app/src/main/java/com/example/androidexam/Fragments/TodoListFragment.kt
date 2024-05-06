@@ -11,6 +11,8 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.androidexam.Adapter.TodoAdapter
 import com.example.androidexam.Models.TodoJob
 import com.example.androidexam.R
 import com.example.androidexam.databinding.CustomdialogBinding
@@ -22,6 +24,9 @@ class TodoListFragment : Fragment() {
 
     private var _binding: FragmentTodoListBinding? = null
 
+
+    private var todoJob = TodoJob()
+    private var todojobList = ArrayList<TodoJob>()
 
     private val binding get() = _binding!!
 
@@ -37,13 +42,14 @@ class TodoListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        binding.textView.text="Item count: ${todojobList.count()}"
 
         binding.button.setOnClickListener {
 
             customAlertDialog(requireContext())
 
-        }
 
+        }
 
 
     }
@@ -53,72 +59,42 @@ class TodoListFragment : Fragment() {
         _binding = null
     }
 
-
-
     private fun customAlertDialog(context: Context) {
-
         val dialogBinding = CustomdialogBinding.inflate(LayoutInflater.from(context))
         val dialog = AlertDialog.Builder(context).apply {
-
             setView(dialogBinding.root)
-
         }.create()
 
         dialog.show()
 
         dialogBinding.button1.setOnClickListener {
+            val editTextValue = dialogBinding.editTextText.text.toString()
+            val selectedRadioButtonId = dialogBinding.radioGroup.checkedRadioButtonId
+            val isChecked = dialogBinding.checkBox.isChecked
 
-
-
-            var binding = CustomdialogBinding.inflate(LayoutInflater.from(getContext()));
-
-            if(binding.checkBox.isChecked) {
-
-                val selectedRadioButtonId: Int = binding.radioGroup.checkedRadioButtonId
-
-                if(selectedRadioButtonId==1)
-                {
-                    var user = TodoJob(binding.editTextText.text.toString(), R.drawable.image_1, true)
-                }
-
-                if(selectedRadioButtonId==2)
-                {
-                    var user = TodoJob(binding.editTextText.text.toString(), R.drawable.image_2, true)
-                }
-
-                if(selectedRadioButtonId==3)
-                {
-                    var user = TodoJob(binding.editTextText.text.toString(), R.drawable.image_3, true)
-                }
+            val drawableId = when (selectedRadioButtonId) {
+                R.id.radioButton1 -> R.drawable.image_1
+                R.id.radioButton2 -> R.drawable.image_2
+                R.id.radioButton3 -> R.drawable.image_3
+                else -> 0
             }
 
-            if(!binding.checkBox.isChecked) {
+            todoJob = TodoJob(editTextValue, drawableId, isChecked)
 
-                val selectedRadioButtonId: Int = binding.radioGroup.checkedRadioButtonId
+            todojobList.add(todoJob)
 
-                if(selectedRadioButtonId==1)
-                {
-                    var user = TodoJob(binding.editTextText.text.toString(), R.drawable.image_1, false)
-                }
+            val todoAdapter = TodoAdapter()
 
-                if(selectedRadioButtonId==2)
-                {
-                    var user = TodoJob(binding.editTextText.text.toString(), R.drawable.image_2, false)
-                }
+            todoAdapter.updateList(todojobList)
 
-                if(selectedRadioButtonId==3)
-                {
-                    var user = TodoJob(binding.editTextText.text.toString(), R.drawable.image_3, false)
-                }
-            }
+            val horizontalLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            binding.recycleViewHome.layoutManager = horizontalLayoutManager
+            binding.recycleViewHome.adapter = todoAdapter
 
-
+            binding.textView.text="Item count: ${todojobList.count()}"
 
             dialog.dismiss()
         }
-
-
     }
-
 
 }

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidexam.Models.TodoJob
+import com.example.androidexam.R
 import com.example.androidexam.databinding.FragmentTodoListBinding
 import com.example.androidexam.databinding.ListItemBinding
 
@@ -33,13 +34,28 @@ class TodoAdapter(): RecyclerView.Adapter<TodoAdapter.NameViewHolder>() {
 
         holder.todoJobBinding.textView.text=todos.task
 
-        holder.todoJobBinding.imageView.setImageResource(todos.warningimage)
+
+        todos.warningimage?.let {
+            holder.todoJobBinding.imageView.setImageResource(it)
+        } ?: holder.todoJobBinding.imageView.setImageResource(R.drawable.ic_launcher_background)
+
 
         if(todos.islastday==false) {
             holder.todoJobBinding.textView2.text = ""
         }
         else{
             holder.todoJobBinding.textView2.text = "Last day"
+        }
+
+        holder.todoJobBinding.imageView2.setOnClickListener {
+
+            val position = holder.adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                list.removeAt(position)
+                notifyItemRemoved(position)
+
+
+            }
         }
     }
 
