@@ -50,7 +50,8 @@ class TodoAdapter(private val onDeleteListener: (Int) -> Unit): RecyclerView.Ada
         }
 
         holder.todoJobBinding.materialCardView.setOnClickListener {
-            Navigation.findNavController(holder.itemView).navigate(TodoListFragmentDirections.actionTodoListFragmentToDetailFragment(todos))
+            Navigation.findNavController(holder.itemView)
+                .navigate(TodoListFragmentDirections.actionTodoListFragmentToDetailFragment(todos))
         }
     }
 
