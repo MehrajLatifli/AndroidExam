@@ -23,7 +23,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
             android:ems="10"
-            android:hint="Join task name"
+            android:hint="Write task name"
             android:inputType="text"
             android:paddingLeft="5dp"
             android:textSize="20sp"

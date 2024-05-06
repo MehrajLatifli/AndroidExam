@@ -41,7 +41,7 @@ class TodoListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.textView.text = "Item count: ${todojobList.size}"
+        refreshui()
 
         binding.button.setOnClickListener {
             customAlertDialog(requireContext())
@@ -79,16 +79,8 @@ class TodoListFragment : Fragment() {
             if(editTextValue.isNotBlank() && editTextValue.isNotEmpty()) {
                 todojobList.add(todoJob)
 
-                val todoAdapter = TodoAdapter(::onDeleteItem)
+                refreshui()
 
-                todoAdapter.updateList(todojobList)
-
-                val horizontalLayoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                binding.recycleViewHome.layoutManager = horizontalLayoutManager
-                binding.recycleViewHome.adapter = todoAdapter
-
-                binding.textView.text = "Item count: ${todojobList.size}"
 
                 dialog.dismiss()
             }
@@ -111,6 +103,19 @@ class TodoListFragment : Fragment() {
         }
     }
 
+
+    private  fun refreshui(){
+
+        val todoAdapter = TodoAdapter(::onDeleteItem)
+        todoAdapter.updateList(todojobList)
+
+        val horizontalLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.recycleViewHome.layoutManager = horizontalLayoutManager
+        binding.recycleViewHome.adapter = todoAdapter
+
+        binding.textView.text = "Item count: ${todojobList.size}"
+    }
 
 
 
