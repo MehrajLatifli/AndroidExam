@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.androidexam.Adapter.TodoAdapter
 import com.example.androidexam.Models.TodoJob
 import com.example.androidexam.R
@@ -21,14 +23,11 @@ import com.example.androidexam.databinding.FragmentTodoListBinding
 
 class TodoListFragment : Fragment() {
 
-
     private var _binding: FragmentTodoListBinding? = null
-
+    private val binding get() = _binding!!
 
     private var todoJob = TodoJob()
     private var todojobList = ArrayList<TodoJob>()
-
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,22 +35,17 @@ class TodoListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentTodoListBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding.textView.text="Item count: ${todojobList.count()}"
+        binding.textView.text = "Item count: ${todojobList.size}"
 
         binding.button.setOnClickListener {
-
             customAlertDialog(requireContext())
-
-
         }
-
-
     }
 
     override fun onDestroyView() {
@@ -81,20 +75,42 @@ class TodoListFragment : Fragment() {
 
             todoJob = TodoJob(editTextValue, drawableId, isChecked)
 
-            todojobList.add(todoJob)
+            if(editTextValue.isNotBlank() && editTextValue.isNotEmpty()) {
+                todojobList.add(todoJob)
 
-            val todoAdapter = TodoAdapter()
+                val todoAdapter = TodoAdapter(::onDeleteItem)
 
-            todoAdapter.updateList(todojobList)
+                todoAdapter.updateList(todojobList)
 
-            val horizontalLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            binding.recycleViewHome.layoutManager = horizontalLayoutManager
-            binding.recycleViewHome.adapter = todoAdapter
+                val horizontalLayoutManager =
+                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                binding.recycleViewHome.layoutManager = horizontalLayoutManager
+                binding.recycleViewHome.adapter = todoAdapter
 
-            binding.textView.text="Item count: ${todojobList.count()}"
+                binding.textView.text = "Item count: ${todojobList.size}"
 
-            dialog.dismiss()
+                dialog.dismiss()
+            }
+            else
+            {
+                Toast.makeText(requireContext(), "Write the name of the task", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
+
+
+    private fun onDeleteItem(position: Int) {
+        if (position != RecyclerView.NO_POSITION) {
+            todojobList.removeAt(position)
+            binding.recycleViewHome.adapter?.notifyItemRemoved(position)
+            binding.textView.text = "Item count: ${todojobList.size}"
+
+            (binding.recycleViewHome.adapter as? TodoAdapter)?.updateList(todojobList)
+        }
+    }
+
+
+
 
 }

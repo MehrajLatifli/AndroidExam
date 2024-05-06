@@ -9,5 +9,18 @@
         android:id="@+id/todoListFragment"
         android:name="com.example.androidexam.Fragments.TodoListFragment"
         android:label="fragment_todo_list"
-        tools:layout="@layout/fragment_todo_list" />
+        tools:layout="@layout/fragment_todo_list" >
+        <action
+            android:id="@+id/action_todoListFragment_to_detailFragment"
+            app:destination="@id/detailFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment3"
+        tools:layout="@layout/fragment_detail"
+        android:name="com.example.androidexam.Fragments.DetailFragment"
+        android:label="DetailFragment" >
+        <argument
+            android:name="todo"
+            app:argType="com.example.androidexam.Models.TodoJob" />
+    </fragment>
 </navigation>
